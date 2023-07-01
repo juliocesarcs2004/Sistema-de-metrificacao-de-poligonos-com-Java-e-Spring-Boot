@@ -34,4 +34,7 @@ public class PontoPoligonoModel {
     @NotNull
     @Positive
     private Integer ordemDoPonto;
+
+    @NotNull
+    private String nomeDoArquivo;
 }

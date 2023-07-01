@@ -17,4 +17,6 @@ public class PontoPoligonoDto {
 
     private Integer ordemDoPonto;
 
+    private String nomeDoArquivo;
+
 }

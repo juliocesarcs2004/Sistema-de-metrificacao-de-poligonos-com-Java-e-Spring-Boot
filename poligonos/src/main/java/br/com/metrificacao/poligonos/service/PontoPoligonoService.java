@@ -61,28 +61,27 @@ public class PontoPoligonoService {
         repository.deleteById(id);
     }
 
-    public void processCsvFile(MultipartFile file) throws IOException, CsvException {
+    public void salvarArquivoCsv(MultipartFile file) throws IOException, CsvException {
         CSVParser csvParser = new CSVParserBuilder().withSeparator(';').build();
         CSVReader csvReader = new CSVReaderBuilder(new InputStreamReader(file.getInputStream()))
                 .withCSVParser(csvParser)
                 .build();
+        String nomeDoArquivo = file.getOriginalFilename();
 
         List<String[]> csvLines = csvReader.readAll();
-        List<PontoPoligonoDto> pontoPoligonoList = new ArrayList<>();
 
         for (int i = 1; i < csvLines.size(); i++) {
             String[] line = csvLines.get(i);
 
-            PontoPoligonoDto pontoPoligonoDto = createPontoPoligonoDto(line);
+            PontoPoligonoDto pontoPoligonoDto = createPontoPoligonoDto(line, nomeDoArquivo);
             PontoPoligonoModel pontoPoligonoModel = modelMapper.map(pontoPoligonoDto, PontoPoligonoModel.class);
             repository.save(pontoPoligonoModel);
-            pontoPoligonoList.add(pontoPoligonoDto);
         }
 
         csvReader.close();
     }
 
-    private PontoPoligonoDto createPontoPoligonoDto(String[] line) {
+    private PontoPoligonoDto createPontoPoligonoDto(String[] line, String nomeDoArquivo) {
         Double coordenadaX = Double.parseDouble(line[0].trim());
         Double coordenadaY = Double.parseDouble(line[1].trim());
         String nomePoligono = line[2].trim();
@@ -93,6 +92,7 @@ public class PontoPoligonoService {
         pontoPoligonoDto.setCoordenadaY(coordenadaY);
         pontoPoligonoDto.setNomePoligono(nomePoligono);
         pontoPoligonoDto.setOrdemDoPonto(ordemDoPonto);
+        pontoPoligonoDto.setNomeDoArquivo(nomeDoArquivo);
 
         return pontoPoligonoDto;
     }

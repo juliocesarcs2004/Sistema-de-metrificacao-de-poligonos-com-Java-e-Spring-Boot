@@ -44,15 +44,15 @@ public class PontoPoligonoController {
         return ResponseEntity.created(endereco).body(poligonoSalvo);
     }
 
-    @PostMapping("/upload-csv")
-    public ResponseEntity<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/carregar-csv")
+    public ResponseEntity<String> carregarArquivoCsv(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("Arquivo CSV não enviado");
         }
 
         try {
-            service.processCsvFile(file);
-            return ResponseEntity.ok("Arquivo CSV processado com sucesso e dados armazenados no banco de dados");
+            service.salvarArquivoCsv(file);
+            return ResponseEntity.ok("Arquivo CSV armazenado com sucesso no banco de dados");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao processar o arquivo CSV");
         } catch (CsvException e) {

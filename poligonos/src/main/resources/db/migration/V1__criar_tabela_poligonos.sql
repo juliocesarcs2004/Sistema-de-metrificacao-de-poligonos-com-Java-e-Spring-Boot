@@ -4,5 +4,6 @@ CREATE TABLE poligonos (
  coordenaday DOUBLE NOT NULL,
  nome_poligono varchar(250) NOT NULL,
  ordem_do_ponto int NOT NULL,
+ nome_do_arquivo varchar(250) NOT NULL,
 PRIMARY KEY (id)
 );
