@@ -2,16 +2,20 @@ package br.com.metrificacao.poligonos.controller;
 
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
 import br.com.metrificacao.poligonos.service.PontoPoligonoService;
+import com.opencsv.exceptions.CsvException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 
 @RestController
@@ -38,6 +42,22 @@ public class PontoPoligonoController {
         URI endereco = uriBuilder.path("/poligonos/{id}").buildAndExpand(poligonoSalvo.getId()).toUri();
 
         return ResponseEntity.created(endereco).body(poligonoSalvo);
+    }
+
+    @PostMapping("/upload-csv")
+    public ResponseEntity<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Arquivo CSV não enviado");
+        }
+
+        try {
+            service.processCsvFile(file);
+            return ResponseEntity.ok("Arquivo CSV processado com sucesso e dados armazenados no banco de dados");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao processar o arquivo CSV");
+        } catch (CsvException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PutMapping("/{id}")

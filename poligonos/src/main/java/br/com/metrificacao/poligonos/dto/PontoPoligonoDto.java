@@ -9,9 +9,9 @@ public class PontoPoligonoDto {
 
     private Long id;
 
-    private Long coordenadaX;
+    private Double coordenadaX;
 
-    private Long coordenadaY;
+    private Double coordenadaY;
 
     private String nomePoligono;
 

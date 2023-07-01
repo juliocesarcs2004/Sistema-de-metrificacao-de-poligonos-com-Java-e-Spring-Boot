@@ -22,10 +22,10 @@ public class PontoPoligonoModel {
     private Long id;
 
     @NotNull
-    private Long coordenadaX;
+    private Double coordenadaX;
 
     @NotNull
-    private Long coordenadaY;
+    private Double coordenadaY;
 
     @NotNull
     @Size(max=20)
