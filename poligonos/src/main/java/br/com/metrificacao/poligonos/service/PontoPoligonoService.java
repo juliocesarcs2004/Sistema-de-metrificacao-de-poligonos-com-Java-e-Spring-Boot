@@ -17,6 +17,7 @@ import com.opencsv.CSVParser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,7 +77,25 @@ public class PontoPoligonoService {
                 .forEach(pontoPoligonoRepository::save);
 
         csvReader.close();
+
+
     }
+
+    private void processarMetricasPoligonos(){
+
+        List<PontoPoligonoModel> listaPoligonos = pontoPoligonoRepository.findAll();
+
+        Map<String, List<PontoPoligonoModel>> poligonosSeparadosPorNome = listaPoligonos.stream()
+                .collect(Collectors.groupingBy(PontoPoligonoModel::getNomePoligono));
+
+        poligonosSeparadosPorNome.forEach((nomePoligono, PoligonoSeparadoPornome) -> {
+
+        });
+
+    }
+
+
+
 
     private PontoPoligonoDto criarPontoPoligonoDto(String[] line, String nomeDoArquivo) {
         return PontoPoligonoDto.builder()
