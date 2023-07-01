@@ -18,7 +18,6 @@ import com.opencsv.CSVParser;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -80,19 +79,13 @@ public class PontoPoligonoService {
     }
 
     private PontoPoligonoDto criarPontoPoligonoDto(String[] line, String nomeDoArquivo) {
-        Double coordenadaX = Double.parseDouble(line[0].trim());
-        Double coordenadaY = Double.parseDouble(line[1].trim());
-        String nomePoligono = line[2].trim();
-        Integer ordemDoPonto = Integer.parseInt(line[3].trim());
-
-        PontoPoligonoDto pontoPoligonoDto = new PontoPoligonoDto();
-        pontoPoligonoDto.setCoordenadaX(coordenadaX);
-        pontoPoligonoDto.setCoordenadaY(coordenadaY);
-        pontoPoligonoDto.setNomePoligono(nomePoligono);
-        pontoPoligonoDto.setOrdemDoPonto(ordemDoPonto);
-        pontoPoligonoDto.setNomeDoArquivo(nomeDoArquivo);
-
-        return pontoPoligonoDto;
+        return PontoPoligonoDto.builder()
+                .coordenadaX(Double.parseDouble(line[0].trim()))
+                .coordenadaY(Double.parseDouble(line[1].trim()))
+                .nomePoligono(line[2].trim())
+                .ordemDoPonto(Integer.parseInt(line[3].trim()))
+                .nomeDoArquivo(nomeDoArquivo)
+                .build();
     }
 
 }
