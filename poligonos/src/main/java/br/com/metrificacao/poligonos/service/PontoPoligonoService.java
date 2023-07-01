@@ -9,8 +9,6 @@ import com.opencsv.exceptions.CsvException;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.opencsv.CSVReader;
@@ -19,24 +17,26 @@ import com.opencsv.CSVParser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PontoPoligonoService {
 
     @Autowired
-    private PontoPoligonoRepository repository;
+    private PontoPoligonoRepository pontoPoligonoRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public Page<PontoPoligonoDto> listarTodosPoligonos(Pageable paginacao) {
-        return repository
-                .findAll(paginacao)
-                .map(p -> modelMapper.map(p, PontoPoligonoDto.class));
+    public List<PontoPoligonoDto> listarTodosPoligonos() {
+        List<PontoPoligonoModel> poligonos = pontoPoligonoRepository.findAll();
+        return poligonos.stream()
+                .map(p -> modelMapper.map(p, PontoPoligonoDto.class))
+                .collect(Collectors.toList());
     }
 
     public PontoPoligonoDto obterPontoPorId(Long id) {
-        PontoPoligonoModel pontoPoligonoModel = repository.findById(id)
+        PontoPoligonoModel pontoPoligonoModel = pontoPoligonoRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
 
         return modelMapper.map(pontoPoligonoModel, PontoPoligonoDto.class);
@@ -44,7 +44,7 @@ public class PontoPoligonoService {
 
     public PontoPoligonoDto salvarPontoPoligono(PontoPoligonoDto pontoPoligonoDto) {
         PontoPoligonoModel pontoPoligonoModel = modelMapper.map(pontoPoligonoDto, PontoPoligonoModel.class);
-        repository.save(pontoPoligonoModel);
+        pontoPoligonoRepository.save(pontoPoligonoModel);
 
         return modelMapper.map(pontoPoligonoModel, PontoPoligonoDto.class);
     }
@@ -52,12 +52,12 @@ public class PontoPoligonoService {
     public PontoPoligonoDto atualizarPontoPoligono(Long id, PontoPoligonoDto pontoPoligonoDto) {
         PontoPoligonoModel pontoPoligonoModel = modelMapper.map(pontoPoligonoDto, PontoPoligonoModel.class);
         pontoPoligonoModel.setId(id);
-        pontoPoligonoModel = repository.save(pontoPoligonoModel);
+        pontoPoligonoModel = pontoPoligonoRepository.save(pontoPoligonoModel);
         return modelMapper.map(pontoPoligonoModel, PontoPoligonoDto.class);
     }
 
     public void excluirPoligono(Long id) {
-        repository.deleteById(id);
+        pontoPoligonoRepository.deleteById(id);
     }
 
     public void salvarArquivoCsv(MultipartFile file) throws IOException, CsvException {
@@ -73,7 +73,7 @@ public class PontoPoligonoService {
                 .skip(1)
                 .map(line -> criarPontoPoligonoDto(line, nomeDoArquivo))
                 .map(pontoPoligonoDto -> modelMapper.map(pontoPoligonoDto, PontoPoligonoModel.class))
-                .forEach(repository::save);
+                .forEach(pontoPoligonoRepository::save);
 
         csvReader.close();
     }

@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/poligonos")
@@ -26,8 +27,8 @@ public class PontoPoligonoController {
     private PontoPoligonoService service;
 
     @GetMapping
-    public Page<PontoPoligonoDto> listarPoligonos(@PageableDefault(size = 10) Pageable paginacao) {
-        return service.listarTodosPoligonos(paginacao);
+    public List<PontoPoligonoDto> listarPoligonos() {
+        return service.listarTodosPoligonos();
     }
 
     @GetMapping("/{id}")
