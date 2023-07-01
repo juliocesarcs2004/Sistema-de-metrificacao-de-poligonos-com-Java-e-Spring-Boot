@@ -70,18 +70,16 @@ public class PontoPoligonoService {
 
         List<String[]> csvLines = csvReader.readAll();
 
-        for (int i = 1; i < csvLines.size(); i++) {
-            String[] line = csvLines.get(i);
-
-            PontoPoligonoDto pontoPoligonoDto = createPontoPoligonoDto(line, nomeDoArquivo);
-            PontoPoligonoModel pontoPoligonoModel = modelMapper.map(pontoPoligonoDto, PontoPoligonoModel.class);
-            repository.save(pontoPoligonoModel);
-        }
+        csvLines.stream()
+                .skip(1)
+                .map(line -> criarPontoPoligonoDto(line, nomeDoArquivo))
+                .map(pontoPoligonoDto -> modelMapper.map(pontoPoligonoDto, PontoPoligonoModel.class))
+                .forEach(repository::save);
 
         csvReader.close();
     }
 
-    private PontoPoligonoDto createPontoPoligonoDto(String[] line, String nomeDoArquivo) {
+    private PontoPoligonoDto criarPontoPoligonoDto(String[] line, String nomeDoArquivo) {
         Double coordenadaX = Double.parseDouble(line[0].trim());
         Double coordenadaY = Double.parseDouble(line[1].trim());
         String nomePoligono = line[2].trim();
