@@ -1,12 +1,11 @@
 package br.com.metrificacao.poligonos.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PontoPoligonoDto {
 
     private Long id;

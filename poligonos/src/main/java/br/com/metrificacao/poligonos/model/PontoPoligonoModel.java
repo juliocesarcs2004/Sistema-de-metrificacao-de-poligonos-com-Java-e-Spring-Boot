@@ -7,9 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
+@Data
 @Table(name = "poligonos")
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PontoPoligonoModel {
