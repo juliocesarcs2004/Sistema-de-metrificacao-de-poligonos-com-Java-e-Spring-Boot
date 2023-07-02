@@ -97,8 +97,8 @@ public class PontoPoligonoService {
             DetalhamentoPoligonoModel detalhamentoPoligonoModel = new DetalhamentoPoligonoModel();
             detalhamentoPoligonoModel.setNomePoligono(nomePoligono);
             detalhamentoPoligonoModel.setNumeroLados(PoligonoMapeadosPornome.size());
-            detalhamentoPoligonoModel.setPerimetro(1D);
-            detalhamentoPoligonoModel.setArea(1D);
+            detalhamentoPoligonoModel.setPerimetro(getPerimetro(PoligonoMapeadosPornome));
+            detalhamentoPoligonoModel.setArea(getArea(PoligonoMapeadosPornome));
             detalhamentoPoligonoModel.setNumeroDiagonais(getNumeroDiagonais(PoligonoMapeadosPornome.size()));
             detalhamentoPoligonoModel.setSomaAngulosInternos(getSomaAngulosInternos(PoligonoMapeadosPornome.size()));
             detalhamentoPoligonoModel.setNomeDoArquivo(PoligonoMapeadosPornome.get(0).getNomeDoArquivo());
@@ -115,6 +115,34 @@ public class PontoPoligonoService {
                 .ordemDoPonto(Integer.parseInt(line[3].trim()))
                 .nomeDoArquivo(nomeDoArquivo)
                 .build();
+    }
+
+    public double getPerimetro(List<PontoPoligonoModel> poligonosMapeadosPorNome) {
+        double perimetro = 0;
+        for (int i = 0; i < poligonosMapeadosPorNome.size(); i++) {
+            PontoPoligonoModel pontoAtual = poligonosMapeadosPorNome.get(i);
+            PontoPoligonoModel pontoProximo = poligonosMapeadosPorNome.get((i + 1) % poligonosMapeadosPorNome.size());
+            perimetro += distanciaPontoAtualPontoProximo(pontoAtual,pontoProximo);
+        }
+        return perimetro;
+    }
+
+    public double distanciaPontoAtualPontoProximo(PontoPoligonoModel pontoAtual, PontoPoligonoModel pontoProximo) {
+        double dx = pontoProximo.getCoordenadaX() - pontoAtual.getCoordenadaX();
+        double dy = pontoProximo.getCoordenadaY() - pontoAtual.getCoordenadaY();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public double getArea(List<PontoPoligonoModel> poligonosMapeadosPorNome) {
+        double area = 0;
+        for (int i = 0; i < poligonosMapeadosPorNome.size(); i++) {
+            PontoPoligonoModel pontoAtual = poligonosMapeadosPorNome.get(i);
+            PontoPoligonoModel pontoProximo = poligonosMapeadosPorNome.get((i + 1) % poligonosMapeadosPorNome.size());
+            area += pontoAtual.getCoordenadaX() * pontoProximo.getCoordenadaY();
+            area -= pontoAtual.getCoordenadaY() * pontoProximo.getCoordenadaX();
+        }
+        area /= 2.0;
+        return Math.abs(area);
     }
 
     public int getNumeroDiagonais(int numeroDePontos) {
