@@ -1,5 +1,6 @@
 package br.com.metrificacao.poligonos.service;
 
+import br.com.metrificacao.poligonos.dto.DetalhamentoPoligonoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
 import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoModel;
 import br.com.metrificacao.poligonos.model.PontoPoligonoModel;
@@ -38,6 +39,13 @@ public class PontoPoligonoService {
         List<PontoPoligonoModel> poligonos = pontoPoligonoRepository.findAll();
         return poligonos.stream()
                 .map(p -> modelMapper.map(p, PontoPoligonoDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<DetalhamentoPoligonoDto> listarTodosPoligonosMetrificados() {
+        List<DetalhamentoPoligonoModel> poligonosMetrificados = detalhamentoPoligonoRepository.findAll();
+        return poligonosMetrificados.stream()
+                .map(p -> modelMapper.map(p, DetalhamentoPoligonoDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -104,7 +112,6 @@ public class PontoPoligonoService {
             detalhamentoPoligonoModel.setNomeDoArquivo(PoligonoMapeadosPornome.get(0).getNomeDoArquivo());
             detalhamentoPoligonoRepository.save(detalhamentoPoligonoModel);
         });
-
     }
 
     private PontoPoligonoDto criarPontoPoligonoDto(String[] line, String nomeDoArquivo) {
@@ -156,5 +163,6 @@ public class PontoPoligonoService {
     public double getSomaAngulosInternos(int numeroDePontos) {
         return (numeroDePontos - 2) * 180;
     }
+
 
 }

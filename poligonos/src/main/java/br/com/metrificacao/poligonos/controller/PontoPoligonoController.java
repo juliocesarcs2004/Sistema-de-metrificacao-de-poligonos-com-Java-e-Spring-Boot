@@ -1,14 +1,12 @@
 package br.com.metrificacao.poligonos.controller;
 
+import br.com.metrificacao.poligonos.dto.DetalhamentoPoligonoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
 import br.com.metrificacao.poligonos.service.PontoPoligonoService;
 import com.opencsv.exceptions.CsvException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +27,11 @@ public class PontoPoligonoController {
     @GetMapping
     public List<PontoPoligonoDto> listarPoligonos() {
         return service.listarTodosPoligonos();
+    }
+
+    @GetMapping("/metricas")
+    public List<DetalhamentoPoligonoDto> listarMetricasPoligonos() {
+        return service.listarTodosPoligonosMetrificados();
     }
 
     @GetMapping("/{id}")
