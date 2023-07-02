@@ -1,7 +1,9 @@
 package br.com.metrificacao.poligonos.service;
 
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
+import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoModel;
 import br.com.metrificacao.poligonos.model.PontoPoligonoModel;
+import br.com.metrificacao.poligonos.repository.DetalhamentoPoligonoRepository;
 import br.com.metrificacao.poligonos.repository.PontoPoligonoRepository;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
@@ -25,6 +27,9 @@ public class PontoPoligonoService {
 
     @Autowired
     private PontoPoligonoRepository pontoPoligonoRepository;
+
+    @Autowired
+    DetalhamentoPoligonoRepository detalhamentoPoligonoRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -78,24 +83,29 @@ public class PontoPoligonoService {
 
         csvReader.close();
 
-
+        processarMetricasPoligonos();
     }
 
     private void processarMetricasPoligonos(){
 
         List<PontoPoligonoModel> listaPoligonos = pontoPoligonoRepository.findAll();
 
-        Map<String, List<PontoPoligonoModel>> poligonosSeparadosPorNome = listaPoligonos.stream()
+        Map<String, List<PontoPoligonoModel>> poligonosMapeadosPorNome = listaPoligonos.stream()
                 .collect(Collectors.groupingBy(PontoPoligonoModel::getNomePoligono));
 
-        poligonosSeparadosPorNome.forEach((nomePoligono, PoligonoSeparadoPornome) -> {
-
+        poligonosMapeadosPorNome.forEach((nomePoligono, PoligonoMapeadosPornome) -> {
+            DetalhamentoPoligonoModel detalhamentoPoligonoModel = new DetalhamentoPoligonoModel();
+            detalhamentoPoligonoModel.setNomePoligono(nomePoligono);
+            detalhamentoPoligonoModel.setNumeroLados(PoligonoMapeadosPornome.size());
+            detalhamentoPoligonoModel.setPerimetro(1D);
+            detalhamentoPoligonoModel.setArea(1D);
+            detalhamentoPoligonoModel.setNumeroDiagonais(getNumeroDiagonais(PoligonoMapeadosPornome.size()));
+            detalhamentoPoligonoModel.setSomaAngulosInternos(getSomaAngulosInternos(PoligonoMapeadosPornome.size()));
+            detalhamentoPoligonoModel.setNomeDoArquivo(PoligonoMapeadosPornome.get(0).getNomeDoArquivo());
+            detalhamentoPoligonoRepository.save(detalhamentoPoligonoModel);
         });
 
     }
-
-
-
 
     private PontoPoligonoDto criarPontoPoligonoDto(String[] line, String nomeDoArquivo) {
         return PontoPoligonoDto.builder()
@@ -105,6 +115,18 @@ public class PontoPoligonoService {
                 .ordemDoPonto(Integer.parseInt(line[3].trim()))
                 .nomeDoArquivo(nomeDoArquivo)
                 .build();
+    }
+
+    public int getNumeroDiagonais(int numeroDePontos) {
+        int numeroDiagonais = 0;
+        if (numeroDePontos >= 4) {
+            numeroDiagonais = (numeroDePontos * (numeroDePontos - 3)) / 2;
+        }
+        return numeroDiagonais;
+    }
+
+    public double getSomaAngulosInternos(int numeroDePontos) {
+        return (numeroDePontos - 2) * 180;
     }
 
 }

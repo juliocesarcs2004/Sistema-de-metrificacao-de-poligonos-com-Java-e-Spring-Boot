@@ -26,4 +26,6 @@ public class DetalhamentoPoligonoDto {
 
     private Double somaAngulosInternos;
 
+    private String nomeDoArquivo;
+
 }
