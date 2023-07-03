@@ -9,6 +9,7 @@ import lombok.*;
 @Entity
 @Data
 @Table(name = "poligonos")
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PontoPoligonoModel {

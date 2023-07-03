@@ -1,8 +1,10 @@
 package br.com.metrificacao.poligonos.controller;
 
+
+import br.com.metrificacao.poligonos.dto.ArquivoPoligonosDto;
 import br.com.metrificacao.poligonos.dto.DetalhamentoPoligonoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
-import br.com.metrificacao.poligonos.service.PontoPoligonoService;
+import br.com.metrificacao.poligonos.service.PoligonoService;
 import com.opencsv.exceptions.CsvException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -19,10 +21,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/poligonos")
-public class PontoPoligonoController {
+public class PoligonoController {
 
     @Autowired
-    private PontoPoligonoService service;
+    private PoligonoService service;
 
     @GetMapping
     public List<PontoPoligonoDto> listarPoligonos() {
@@ -32,6 +34,11 @@ public class PontoPoligonoController {
     @GetMapping("/metricas")
     public List<DetalhamentoPoligonoDto> listarMetricasPoligonos() {
         return service.listarTodosPoligonosMetrificados();
+    }
+
+    @GetMapping("/arquivos")
+    public List<ArquivoPoligonosDto> listarArquivosPoligonos() {
+        return service.listarArquivosPoligonos();
     }
 
     @GetMapping("/{id}")

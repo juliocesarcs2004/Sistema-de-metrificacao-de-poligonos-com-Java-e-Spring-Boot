@@ -1,9 +1,12 @@
 package br.com.metrificacao.poligonos.service;
 
+import br.com.metrificacao.poligonos.dto.ArquivoPoligonosDto;
 import br.com.metrificacao.poligonos.dto.DetalhamentoPoligonoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
+import br.com.metrificacao.poligonos.model.ArquivoPoligonosModel;
 import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoModel;
 import br.com.metrificacao.poligonos.model.PontoPoligonoModel;
+import br.com.metrificacao.poligonos.repository.ArquivoPoligonosRepository;
 import br.com.metrificacao.poligonos.repository.DetalhamentoPoligonoRepository;
 import br.com.metrificacao.poligonos.repository.PontoPoligonoRepository;
 import com.opencsv.CSVParserBuilder;
@@ -24,13 +27,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class PontoPoligonoService {
+public class PoligonoService {
 
     @Autowired
     private PontoPoligonoRepository pontoPoligonoRepository;
 
     @Autowired
     DetalhamentoPoligonoRepository detalhamentoPoligonoRepository;
+
+    @Autowired
+    ArquivoPoligonosRepository arquivoPoligonosRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -46,6 +52,13 @@ public class PontoPoligonoService {
         List<DetalhamentoPoligonoModel> poligonosMetrificados = detalhamentoPoligonoRepository.findAll();
         return poligonosMetrificados.stream()
                 .map(p -> modelMapper.map(p, DetalhamentoPoligonoDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<ArquivoPoligonosDto> listarArquivosPoligonos() {
+        List<ArquivoPoligonosModel> arquivosPoligonos = arquivoPoligonosRepository.findAll();
+        return arquivosPoligonos.stream()
+                .map(p -> modelMapper.map(p, ArquivoPoligonosDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -80,6 +93,7 @@ public class PontoPoligonoService {
                 .withCSVParser(csvParser)
                 .build();
         String nomeDoArquivo = file.getOriginalFilename();
+        salvarNomeDoArquivo(nomeDoArquivo);
 
         List<String[]> csvLines = csvReader.readAll();
 
@@ -164,5 +178,10 @@ public class PontoPoligonoService {
         return (numeroDePontos - 2) * 180;
     }
 
+    private void salvarNomeDoArquivo(String nomeDoArquivo) {
+        ArquivoPoligonosModel arquivoPoligonosModel = new ArquivoPoligonosModel();
+        arquivoPoligonosModel.setNomeDoArquivo(nomeDoArquivo);
+        arquivoPoligonosRepository.save(arquivoPoligonosModel);
+    }
 
 }
