@@ -1,8 +1,10 @@
 package br.com.metrificacao.poligonos.service;
 
+import br.com.metrificacao.poligonos.dto.ArquivoDetalhadoPoligonosDto;
 import br.com.metrificacao.poligonos.dto.ArquivoPoligonosDto;
 import br.com.metrificacao.poligonos.dto.DetalhamentoPoligonoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
+import br.com.metrificacao.poligonos.model.ArquivoDetalhadoPoligonosModel;
 import br.com.metrificacao.poligonos.model.ArquivoPoligonosModel;
 import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoModel;
 import br.com.metrificacao.poligonos.model.PontoPoligonoModel;
@@ -22,6 +24,7 @@ import com.opencsv.CSVParser;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,9 +51,27 @@ public class PoligonoService {
                 .collect(Collectors.toList());
     }
 
-    public List<DetalhamentoPoligonoDto> listarArquivosPoligonosDetalhados() {
+    public List<ArquivoDetalhadoPoligonosDto> listarArquivosPoligonosDetalhados() {
+        List<ArquivoPoligonosModel> arquivos = arquivoPoligonosRepository.findAll();
+        List<DetalhamentoPoligonoModel> detalhamentoPoligonos = detalhamentoPoligonoRepository.findAll();
 
-        return null;
+        List<ArquivoDetalhadoPoligonosDto> listaArquivosDetalhados = new ArrayList<>();
+
+        for (ArquivoPoligonosModel arquivo : arquivos) {
+            List<DetalhamentoPoligonoModel> detalhamentosPorArquivo = detalhamentoPoligonos.stream()
+                    .filter(d -> d.getNomeDoArquivo().equals(arquivo.getNomeDoArquivo()))
+                    .collect(Collectors.toList());
+
+            ArquivoDetalhadoPoligonosDto arquivoDetalhado = ArquivoDetalhadoPoligonosDto.builder()
+                    .idArquivo(arquivo.getIdArquivo())
+                    .nomeDoArquivo(arquivo.getNomeDoArquivo())
+                    .listaPoligonosDetalhados(detalhamentosPorArquivo)
+                    .build();
+
+            listaArquivosDetalhados.add(arquivoDetalhado);
+        }
+
+        return listaArquivosDetalhados;
     }
 
     public List<DetalhamentoPoligonoDto> listarTodosPoligonosMetrificados() {

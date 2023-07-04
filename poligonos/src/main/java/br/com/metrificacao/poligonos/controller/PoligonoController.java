@@ -1,6 +1,7 @@
 package br.com.metrificacao.poligonos.controller;
 
 
+import br.com.metrificacao.poligonos.dto.ArquivoDetalhadoPoligonosDto;
 import br.com.metrificacao.poligonos.dto.ArquivoPoligonosDto;
 import br.com.metrificacao.poligonos.dto.DetalhamentoPoligonoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
@@ -37,7 +38,7 @@ public class PoligonoController {
     }
 
     @GetMapping("/arquivos-detalhados")
-    public List<DetalhamentoPoligonoDto> listarArquivosDetalhados() {
+    public List<ArquivoDetalhadoPoligonosDto> listarArquivosDetalhados() {
         return service.listarArquivosPoligonosDetalhados();
     }
 
