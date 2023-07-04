@@ -22,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/poligonos")
+@CrossOrigin(origins = "*")
 public class PoligonoController {
 
     @Autowired
