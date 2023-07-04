@@ -36,6 +36,11 @@ public class PoligonoController {
         return service.listarTodosPoligonosMetrificados();
     }
 
+    @GetMapping("/arquivos-detalhados")
+    public List<DetalhamentoPoligonoDto> listarArquivosDetalhados() {
+        return service.listarArquivosPoligonosDetalhados();
+    }
+
     @GetMapping("/arquivos")
     public List<ArquivoPoligonosDto> listarArquivosPoligonos() {
         return service.listarArquivosPoligonos();

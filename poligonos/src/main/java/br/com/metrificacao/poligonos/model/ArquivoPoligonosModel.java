@@ -17,7 +17,7 @@ public class ArquivoPoligonosModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idArquivo;
 
     @NotNull
     private String nomeDoArquivo;

@@ -48,6 +48,11 @@ public class PoligonoService {
                 .collect(Collectors.toList());
     }
 
+    public List<DetalhamentoPoligonoDto> listarArquivosPoligonosDetalhados() {
+
+        return null;
+    }
+
     public List<DetalhamentoPoligonoDto> listarTodosPoligonosMetrificados() {
         List<DetalhamentoPoligonoModel> poligonosMetrificados = detalhamentoPoligonoRepository.findAll();
         return poligonosMetrificados.stream()
@@ -78,7 +83,7 @@ public class PoligonoService {
 
     public PontoPoligonoDto atualizarPontoPoligono(Long id, PontoPoligonoDto pontoPoligonoDto) {
         PontoPoligonoModel pontoPoligonoModel = modelMapper.map(pontoPoligonoDto, PontoPoligonoModel.class);
-        pontoPoligonoModel.setId(id);
+        pontoPoligonoModel.setIdPoligono(id);
         pontoPoligonoModel = pontoPoligonoRepository.save(pontoPoligonoModel);
         return modelMapper.map(pontoPoligonoModel, PontoPoligonoDto.class);
     }
