@@ -57,7 +57,10 @@ A aplicação será iniciada e estará disponível em `http://localhost:8080`.
 
 ## Documentação da API
 
-A documentação da API pode ser acessada em `http://localhost:8080/swagger-ui.html`.
+A documentação da API pode ser acessada em:
+
+`http://localhost:8080/swagger-ui/index.html#/`
+         `http://localhost:8080/v3/api-docs`
 
 ## Contribuição
 
