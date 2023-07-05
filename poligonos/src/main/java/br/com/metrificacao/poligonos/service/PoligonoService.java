@@ -1,9 +1,10 @@
 package br.com.metrificacao.poligonos.service;
 
-import br.com.metrificacao.poligonos.dto.ArquivoDetalhadoPoligonosDto;
+import br.com.metrificacao.poligonos.dto.ArquivoDetalhadoPoligonosSemNomeDeArquivoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
 import br.com.metrificacao.poligonos.model.ArquivoPoligonosModel;
 import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoModel;
+import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoSemNomeDeArquivoModel;
 import br.com.metrificacao.poligonos.model.PontoPoligonoModel;
 import br.com.metrificacao.poligonos.repository.ArquivoPoligonosRepository;
 import br.com.metrificacao.poligonos.repository.DetalhamentoPoligonoRepository;
@@ -41,27 +42,46 @@ public class PoligonoService {
     private ModelMapper modelMapper;
 
 
-    public List<ArquivoDetalhadoPoligonosDto> listarArquivosPoligonosDetalhados() {
+    public List<ArquivoDetalhadoPoligonosSemNomeDeArquivoDto> listarArquivosPoligonosDetalhados() {
         List<ArquivoPoligonosModel> arquivos = arquivoPoligonosRepository.findAll();
         List<DetalhamentoPoligonoModel> detalhamentoPoligonos = detalhamentoPoligonoRepository.findAll();
 
-        List<ArquivoDetalhadoPoligonosDto> listaArquivosDetalhados = new ArrayList<>();
+        List<ArquivoDetalhadoPoligonosSemNomeDeArquivoDto> listaArquivosDetalhadosSemNomeDeArquivo = new ArrayList<>();
 
         for (ArquivoPoligonosModel arquivo : arquivos) {
             List<DetalhamentoPoligonoModel> detalhamentosPorArquivo = detalhamentoPoligonos.stream()
                     .filter(d -> d.getNomeDoArquivo().equals(arquivo.getNomeDoArquivo()))
                     .collect(Collectors.toList());
 
-            ArquivoDetalhadoPoligonosDto arquivoDetalhado = ArquivoDetalhadoPoligonosDto.builder()
+            List<DetalhamentoPoligonoSemNomeDeArquivoModel> listaDePoligonosSemNomeDeArquivo =
+                    retirarNomeDeArquivoDaLista(detalhamentosPorArquivo);
+
+
+            ArquivoDetalhadoPoligonosSemNomeDeArquivoDto arquivoDetalhado = ArquivoDetalhadoPoligonosSemNomeDeArquivoDto.builder()
                     .idArquivo(arquivo.getIdArquivo())
                     .nomeDoArquivo(arquivo.getNomeDoArquivo())
-                    .listaPoligonosDetalhados(detalhamentosPorArquivo)
+                    .listaPoligonosDetalhadosSemNomeDeArquivo(listaDePoligonosSemNomeDeArquivo)
                     .build();
 
-            listaArquivosDetalhados.add(arquivoDetalhado);
+            listaArquivosDetalhadosSemNomeDeArquivo.add(arquivoDetalhado);
         }
 
-        return listaArquivosDetalhados;
+        return listaArquivosDetalhadosSemNomeDeArquivo;
+    }
+
+    private List<DetalhamentoPoligonoSemNomeDeArquivoModel> retirarNomeDeArquivoDaLista(List<DetalhamentoPoligonoModel> detalhamentosPorArquivo) {
+        return detalhamentosPorArquivo
+                .stream()
+                .map(detalhamentoPoligonoModel -> DetalhamentoPoligonoSemNomeDeArquivoModel.builder()
+                        .idDetalhamento(detalhamentoPoligonoModel.getIdDetalhamento())
+                        .nomePoligono(detalhamentoPoligonoModel.getNomePoligono())
+                        .numeroLados(detalhamentoPoligonoModel.getNumeroLados())
+                        .perimetro(detalhamentoPoligonoModel.getPerimetro())
+                        .area(detalhamentoPoligonoModel.getArea())
+                        .numeroDiagonais(detalhamentoPoligonoModel.getNumeroDiagonais())
+                        .somaAngulosInternos(detalhamentoPoligonoModel.getSomaAngulosInternos())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public void salvarArquivoCsv(MultipartFile file) throws IOException, CsvException {
