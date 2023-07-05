@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetalhamentoPoligonoSemNomeDeArquivoModel {
+public class DetalhamentoDePoligonosListaModel {
 
     private Long idDetalhamento;
 

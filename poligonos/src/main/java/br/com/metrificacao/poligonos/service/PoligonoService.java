@@ -1,10 +1,10 @@
 package br.com.metrificacao.poligonos.service;
 
-import br.com.metrificacao.poligonos.dto.ArquivoDetalhadoPoligonosSemNomeDeArquivoDto;
+import br.com.metrificacao.poligonos.dto.ListaDePoligonosPorArquivoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
 import br.com.metrificacao.poligonos.model.ArquivoPoligonosModel;
 import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoModel;
-import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoSemNomeDeArquivoModel;
+import br.com.metrificacao.poligonos.model.DetalhamentoDePoligonosListaModel;
 import br.com.metrificacao.poligonos.model.PontoPoligonoModel;
 import br.com.metrificacao.poligonos.repository.ArquivoPoligonosRepository;
 import br.com.metrificacao.poligonos.repository.DetalhamentoPoligonoRepository;
@@ -42,37 +42,37 @@ public class PoligonoService {
     private ModelMapper modelMapper;
 
 
-    public List<ArquivoDetalhadoPoligonosSemNomeDeArquivoDto> listarArquivosPoligonosDetalhados() {
+    public List<ListaDePoligonosPorArquivoDto> listarArquivosPoligonosDetalhados() {
         List<ArquivoPoligonosModel> arquivos = arquivoPoligonosRepository.findAll();
         List<DetalhamentoPoligonoModel> detalhamentoPoligonos = detalhamentoPoligonoRepository.findAll();
 
-        List<ArquivoDetalhadoPoligonosSemNomeDeArquivoDto> listaArquivosDetalhadosSemNomeDeArquivo = new ArrayList<>();
+        List<ListaDePoligonosPorArquivoDto> listadePoligonosDetalhadosPorArquivo = new ArrayList<>();
 
         for (ArquivoPoligonosModel arquivo : arquivos) {
             List<DetalhamentoPoligonoModel> detalhamentosPorArquivo = detalhamentoPoligonos.stream()
                     .filter(d -> d.getNomeDoArquivo().equals(arquivo.getNomeDoArquivo()))
                     .collect(Collectors.toList());
 
-            List<DetalhamentoPoligonoSemNomeDeArquivoModel> listaDePoligonosSemNomeDeArquivo =
-                    retirarNomeDeArquivoDaLista(detalhamentosPorArquivo);
+            List<DetalhamentoDePoligonosListaModel> listaDetalhamentoDePoligonos =
+                    contruirListaDetalhamentoDePoligonos(detalhamentosPorArquivo);
 
 
-            ArquivoDetalhadoPoligonosSemNomeDeArquivoDto arquivoDetalhado = ArquivoDetalhadoPoligonosSemNomeDeArquivoDto.builder()
+            ListaDePoligonosPorArquivoDto arquivoDetalhado = ListaDePoligonosPorArquivoDto.builder()
                     .idArquivo(arquivo.getIdArquivo())
                     .nomeDoArquivo(arquivo.getNomeDoArquivo())
-                    .listaPoligonosDetalhadosSemNomeDeArquivo(listaDePoligonosSemNomeDeArquivo)
+                    .listaPoligonosDetalhados(listaDetalhamentoDePoligonos)
                     .build();
 
-            listaArquivosDetalhadosSemNomeDeArquivo.add(arquivoDetalhado);
+            listadePoligonosDetalhadosPorArquivo.add(arquivoDetalhado);
         }
 
-        return listaArquivosDetalhadosSemNomeDeArquivo;
+        return listadePoligonosDetalhadosPorArquivo;
     }
 
-    private List<DetalhamentoPoligonoSemNomeDeArquivoModel> retirarNomeDeArquivoDaLista(List<DetalhamentoPoligonoModel> detalhamentosPorArquivo) {
+    private List<DetalhamentoDePoligonosListaModel> contruirListaDetalhamentoDePoligonos(List<DetalhamentoPoligonoModel> detalhamentosPorArquivo) {
         return detalhamentosPorArquivo
                 .stream()
-                .map(detalhamentoPoligonoModel -> DetalhamentoPoligonoSemNomeDeArquivoModel.builder()
+                .map(detalhamentoPoligonoModel -> DetalhamentoDePoligonosListaModel.builder()
                         .idDetalhamento(detalhamentoPoligonoModel.getIdDetalhamento())
                         .nomePoligono(detalhamentoPoligonoModel.getNomePoligono())
                         .numeroLados(detalhamentoPoligonoModel.getNumeroLados())

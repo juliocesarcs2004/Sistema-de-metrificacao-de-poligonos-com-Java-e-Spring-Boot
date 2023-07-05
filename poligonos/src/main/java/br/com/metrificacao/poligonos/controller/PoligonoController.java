@@ -63,7 +63,7 @@ public class PoligonoController {
     }
 
     @GetMapping("/arquivos-detalhados")
-    public List<ArquivoDetalhadoPoligonosSemNomeDeArquivoDto> listarArquivosDetalhados() {
+    public List<ListaDePoligonosPorArquivoDto> listarArquivosDetalhados() {
         return poligonoService.listarArquivosPoligonosDetalhados();
     }
 

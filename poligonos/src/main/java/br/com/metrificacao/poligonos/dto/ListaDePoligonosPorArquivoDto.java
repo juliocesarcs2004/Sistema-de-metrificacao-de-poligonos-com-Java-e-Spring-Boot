@@ -1,6 +1,6 @@
 package br.com.metrificacao.poligonos.dto;
 
-import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoSemNomeDeArquivoModel;
+import br.com.metrificacao.poligonos.model.DetalhamentoDePoligonosListaModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +12,11 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArquivoDetalhadoPoligonosSemNomeDeArquivoDto {
+public class ListaDePoligonosPorArquivoDto {
 
     private Long idArquivo;
 
     private String nomeDoArquivo;
 
-    private List<DetalhamentoPoligonoSemNomeDeArquivoModel> listaPoligonosDetalhadosSemNomeDeArquivo;
+    private List<DetalhamentoDePoligonosListaModel> listaPoligonosDetalhados;
 }
