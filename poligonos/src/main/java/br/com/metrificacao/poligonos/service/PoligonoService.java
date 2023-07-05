@@ -1,10 +1,7 @@
 package br.com.metrificacao.poligonos.service;
 
 import br.com.metrificacao.poligonos.dto.ArquivoDetalhadoPoligonosDto;
-import br.com.metrificacao.poligonos.dto.ArquivoPoligonosDto;
-import br.com.metrificacao.poligonos.dto.DetalhamentoPoligonoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
-import br.com.metrificacao.poligonos.model.ArquivoDetalhadoPoligonosModel;
 import br.com.metrificacao.poligonos.model.ArquivoPoligonosModel;
 import br.com.metrificacao.poligonos.model.DetalhamentoPoligonoModel;
 import br.com.metrificacao.poligonos.model.PontoPoligonoModel;
@@ -14,7 +11,6 @@ import br.com.metrificacao.poligonos.repository.PontoPoligonoRepository;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,12 +40,6 @@ public class PoligonoService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<PontoPoligonoDto> listarTodosPoligonos() {
-        List<PontoPoligonoModel> poligonos = pontoPoligonoRepository.findAll();
-        return poligonos.stream()
-                .map(p -> modelMapper.map(p, PontoPoligonoDto.class))
-                .collect(Collectors.toList());
-    }
 
     public List<ArquivoDetalhadoPoligonosDto> listarArquivosPoligonosDetalhados() {
         List<ArquivoPoligonosModel> arquivos = arquivoPoligonosRepository.findAll();
@@ -72,45 +62,6 @@ public class PoligonoService {
         }
 
         return listaArquivosDetalhados;
-    }
-
-    public List<DetalhamentoPoligonoDto> listarTodosPoligonosMetrificados() {
-        List<DetalhamentoPoligonoModel> poligonosMetrificados = detalhamentoPoligonoRepository.findAll();
-        return poligonosMetrificados.stream()
-                .map(p -> modelMapper.map(p, DetalhamentoPoligonoDto.class))
-                .collect(Collectors.toList());
-    }
-
-    public List<ArquivoPoligonosDto> listarArquivosPoligonos() {
-        List<ArquivoPoligonosModel> arquivosPoligonos = arquivoPoligonosRepository.findAll();
-        return arquivosPoligonos.stream()
-                .map(p -> modelMapper.map(p, ArquivoPoligonosDto.class))
-                .collect(Collectors.toList());
-    }
-
-    public PontoPoligonoDto obterPontoPorId(Long id) {
-        PontoPoligonoModel pontoPoligonoModel = pontoPoligonoRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
-
-        return modelMapper.map(pontoPoligonoModel, PontoPoligonoDto.class);
-    }
-
-    public PontoPoligonoDto salvarPontoPoligono(PontoPoligonoDto pontoPoligonoDto) {
-        PontoPoligonoModel pontoPoligonoModel = modelMapper.map(pontoPoligonoDto, PontoPoligonoModel.class);
-        pontoPoligonoRepository.save(pontoPoligonoModel);
-
-        return modelMapper.map(pontoPoligonoModel, PontoPoligonoDto.class);
-    }
-
-    public PontoPoligonoDto atualizarPontoPoligono(Long id, PontoPoligonoDto pontoPoligonoDto) {
-        PontoPoligonoModel pontoPoligonoModel = modelMapper.map(pontoPoligonoDto, PontoPoligonoModel.class);
-        pontoPoligonoModel.setIdPoligono(id);
-        pontoPoligonoModel = pontoPoligonoRepository.save(pontoPoligonoModel);
-        return modelMapper.map(pontoPoligonoModel, PontoPoligonoDto.class);
-    }
-
-    public void excluirPoligono(Long id) {
-        pontoPoligonoRepository.deleteById(id);
     }
 
     public void salvarArquivoCsv(MultipartFile file) throws IOException, CsvException {
@@ -209,5 +160,4 @@ public class PoligonoService {
         arquivoPoligonosModel.setNomeDoArquivo(nomeDoArquivo);
         arquivoPoligonosRepository.save(arquivoPoligonosModel);
     }
-
 }
