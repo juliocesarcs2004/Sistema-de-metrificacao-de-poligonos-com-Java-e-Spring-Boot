@@ -5,7 +5,6 @@ import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
 import br.com.metrificacao.poligonos.model.PontoPoligonoModel;
 import br.com.metrificacao.poligonos.repository.DetalhamentoPoligonoRepository;
 import br.com.metrificacao.poligonos.repository.PontoPoligonoRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

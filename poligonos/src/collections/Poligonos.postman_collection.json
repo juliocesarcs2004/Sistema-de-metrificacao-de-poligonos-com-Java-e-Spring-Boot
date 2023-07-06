@@ -1,0 +1,105 @@
+{
+	"info": {
+		"_postman_id": "1ff9eefc-b23d-4115-a644-263c6bf47db6",
+		"name": "Poligonos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16208101"
+	},
+	"item": [
+		{
+			"name": "Poligonos",
+			"item": [
+				{
+					"name": "http://localhost:8080/poligonos/carregar-csv",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/julio/Dropbox/Arquivos de Julio César/Desenvolvimento de Software/Geral/Processo Seletivo CESAR/input_file2.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/poligonos/carregar-csv",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"poligonos",
+								"carregar-csv"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/poligonos/metricas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/poligonos/metricas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"poligonos",
+								"metricas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/poligonos/1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/poligonos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"poligonos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/poligonos/arquivos-detalhados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/poligonos/arquivos-detalhados",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"poligonos",
+								"arquivos-detalhados"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
