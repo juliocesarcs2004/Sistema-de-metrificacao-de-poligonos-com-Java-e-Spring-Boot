@@ -2,10 +2,10 @@ package br.com.metrificacao.poligonos.controller;
 
 import br.com.metrificacao.poligonos.dto.DetalhamentoPoligonoDto;
 import br.com.metrificacao.poligonos.dto.PontoPoligonoDto;
+import br.com.metrificacao.poligonos.model.PontoPoligonoModel;
 import br.com.metrificacao.poligonos.repository.DetalhamentoPoligonoRepository;
 import br.com.metrificacao.poligonos.repository.PontoPoligonoRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +16,14 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -59,35 +57,30 @@ class PoligonoControllerTest {
     }
 
     @Test
-    @DisplayName("Deveria devolver o ponto polígono correto")
-    void testSelecionarPontoPoligono() throws Exception {
+    @DisplayName("Deveria retornar o PontoPoligonoDto Correto")
+    void obterPontoPorId() throws Exception {
         Long id = 1L;
 
+        PontoPoligonoModel pontoPoligonoModel = PontoPoligonoModel.builder()
+                .idPoligono(id)
+                .coordenadaX(0.0)
+                .coordenadaY(0.0)
+                .nomePoligono("triangulo")
+                .ordemDoPonto(1)
+                .nomeDoArquivo("input_file.csv")
+                .build();
 
-        // Simula a chamada do endpoint "/{id}"
-        MvcResult result = mvc.perform(get("/poligonos" + id))
-                .andExpect(status().isOk())
-                .andReturn();
+        when(pontoPoligonoRepository.findById(id)).thenReturn(Optional.of(pontoPoligonoModel));
 
-        // Obtém a resposta do endpoint
-        String responseContent = result.getResponse().getContentAsString();
+        var response = mvc.perform(get("/poligonos/" + id)).andReturn().getResponse();
 
-        // Converte a resposta para um objeto PontoPoligonoDto
-        ObjectMapper objectMapper = new ObjectMapper();
-        PontoPoligonoDto pontoPoligonoDto = objectMapper.readValue(responseContent, PontoPoligonoDto.class);
-
-        // Cria o objeto PontoPoligonoDto esperado
-        PontoPoligonoDto pontoEsperado = new PontoPoligonoDto(
-                1L,
-                0.0,
-                0.0,
-                "triangulo",
-                1,
-                "input_file2.csv"
-        );
-
-        // Verifica se o ponto polígono retornado é igual ao ponto esperado
-        assertThat(pontoPoligonoDto).isEqualTo(pontoEsperado);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        PontoPoligonoDto pontoPoligonoDto = pontoPoligonoDtoJson.parseObject(response.getContentAsString());
+        assertThat(pontoPoligonoDto.getId()).isEqualTo(id);
+        assertThat(pontoPoligonoDto.getCoordenadaX()).isEqualTo(0.0);
+        assertThat(pontoPoligonoDto.getCoordenadaY()).isEqualTo(0.0);
+        assertThat(pontoPoligonoDto.getNomePoligono()).isEqualTo("triangulo");
+        assertThat(pontoPoligonoDto.getOrdemDoPonto()).isEqualTo(1);
+        assertThat(pontoPoligonoDto.getNomeDoArquivo()).isEqualTo("input_file.csv");
     }
-
 }
