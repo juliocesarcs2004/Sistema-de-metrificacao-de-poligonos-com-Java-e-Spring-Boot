@@ -55,12 +55,39 @@ Para executar a aplicação, siga as instruções abaixo:
 
 A aplicação será iniciada e estará disponível em `http://localhost:8080`.
 
+## Executando a aplicação via Container no Docker
+
+Para executar a aplicação via contêiner, siga as instruções abaixo:
+
+1. Instale e configure o Docker:
+
+2. Navegue até a pasta onde está localizado o arquivo Dockerfile (Sistema-de-metrificacao-de-poligonos-com-Java-e-Spring-Boot/poligonos)
+
+3. Para construir a imagem Docker, execute o seguinte comando:
+
+   ```
+   docker build -t poligonosimagem
+   ```
+
+4. Para conferir a imagem gerada digite:
+
+   ```
+   docker images
+   ```
+   
+5. Para executar um contêiner a partir da imagem, você pode usar o seguinte comando:
+
+   ```
+   docker run -p 8080:8080 poligonosimagem
+   ```
+
 ## Documentação da API
 
 A documentação da API pode ser acessada em:
 
 `http://localhost:8080/swagger-ui/index.html#/`
-         `http://localhost:8080/v3/api-docs`
+         
+`http://localhost:8080/v3/api-docs`
 
 ## Contribuição
 
